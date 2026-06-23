@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Banana Me CrazEE! · Admin</title>
+<link rel="icon" type="image/png" href="images/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #008060;        /* Shopify green */
+    --green-dark: #004c3f;
+    --green-soft: #e3f1ed;
+    --bg: #f1f1f3;
+    --card: #ffffff;
+    --line: #e3e3e3;
+    --ink: #1a1a1a;
+    --muted: #6d7175;
+    --radius: 12px;
+    --shadow: 0 1px 0 rgba(0,0,0,.05), 0 1px 3px rgba(0,0,0,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  a { color: inherit; }
+
+  .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* ---- Sidebar ---- */
+  .sidebar { background: #fbfbfb; border-right: 1px solid var(--line); padding: 14px 12px; position: sticky; top: 0; height: 100vh; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 6px 8px 14px; }
+  .brand img { width: 34px; height: 34px; object-fit: contain; }
+  .brand b { font-size: 15px; font-weight: 800; }
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+  .nav a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #303030; text-decoration: none; }
+  .nav a .i { width: 18px; text-align: center; }
+  .nav a:hover { background: #f1f1f1; }
+  .nav a.active { background: #ebebeb; font-weight: 700; }
+  .side-foot { position: absolute; bottom: 14px; left: 12px; right: 12px; font-size: 12px; color: var(--muted); }
+  .side-foot a { color: var(--green); font-weight: 600; }
+
+  /* ---- Topbar ---- */
+  .topbar { background: #fff; border-bottom: 1px solid var(--line); height: 56px; display: flex; align-items: center; gap: 16px; padding: 0 24px; position: sticky; top: 0; z-index: 5; }
+  .search { flex: 1; max-width: 480px; }
+  .search input { width: 100%; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: #f6f6f7; font: inherit; font-size: 14px; }
+  .topbar .spacer { flex: 1; }
+  .pill { background: var(--green); color: #fff; border: 0; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-dark); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+
+  /* ---- Content ---- */
+  .content { padding: 24px; max-width: 1080px; margin: 0 auto; width: 100%; }
+  .page-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+  .metric { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+  .metric .label { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .metric .value { font-size: 26px; font-weight: 800; margin-top: 6px; }
+  .metric .delta { font-size: 12px; font-weight: 600; margin-top: 4px; }
+  .delta.up { color: var(--green); }
+  .delta.down { color: #c0341d; }
+
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .panel-head h2 { font-size: 15px; font-weight: 700; }
+  .panel-head .muted { font-size: 13px; color: var(--muted); }
+  .panel-body { padding: 18px; }
+
+  /* chart */
+  .chart { display: flex; align-items: flex-end; gap: 10px; height: 180px; padding-top: 10px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+  .bar { width: 100%; max-width: 42px; background: linear-gradient(180deg, #00a37a, var(--green)); border-radius: 6px 6px 0 0; transition: height .6s ease; position: relative; }
+  .bar:hover::after { content: attr(data-val); position: absolute; top: -22px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+  .bar-lbl { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+  /* table */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 11px 18px; font-size: 14px; border-bottom: 1px solid var(--line); }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: #fafafa; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
+  .tag.paid { background: var(--green-soft); color: var(--green-dark); }
+  .tag.fulfilled { background: #e4ecf7; color: #1f3a5f; }
+  .tag.new { background: #fdf2c9; color: #8a6d00; }
+  .mono { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  .prod-row td { display: table-cell; }
+  .prod-name { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .prod-thumb { width: 38px; height: 38px; border-radius: 8px; background: #f1f1f1 center/cover; flex: none; }
+  .stock-ok { color: var(--green); font-weight: 600; }
+  .stock-low { color: #b25b00; font-weight: 600; }
+
+  .demo-banner { background: #fff4d6; border: 1px solid #f0d27a; color: #7a5b00; font-size: 13px; padding: 9px 14px; border-radius: 8px; margin-bottom: 18px; font-weight: 500; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="images/logo.png" alt="" />
+      <b>Banana Me CrazEE</b>
+    </div>
+    <nav class="nav">
+      <a class="active" href="#"><span class="i">🏠</span> Home</a>
+      <a href="#orders"><span class="i">🧾</span> Orders</a>
+      <a href="#products"><span class="i">🍮</span> Products</a>
+      <a href="#"><span class="i">👥</span> Customers</a>
+      <a href="#"><span class="i">📊</span> Analytics</a>
+      <a href="#"><span class="i">⚙️</span> Settings</a>
+    </nav>
+    <div class="side-foot">
+      Demo admin · <a href="index.html">View store →</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div>
+    <header class="topbar">
+      <div class="search"><input type="search" placeholder="Search orders, products, customers…" /></div>
+      <div class="spacer"></div>
+      <a class="pill" href="index.html" target="_blank">View store</a>
+      <div class="avatar">DB</div>
+    </header>
+
+    <main class="content">
+      <h1 class="page-title">Good afternoon, Drew 🍌</h1>
+      <p class="page-sub">Here's what's happening with Banana Me CrazEE today.</p>
+
+      <div class="demo-banner">🔒 Demo dashboard — figures combine sample data with any orders you place on the store's mock checkout. Place an order, then refresh to see it appear under Orders.</div>
+
+      <!-- Metrics -->
+      <section class="cards" id="metrics"></section>
+
+      <!-- Sales chart -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Sales over time</h2>
+          <span class="muted">Last 7 days</span>
+        </div>
+        <div class="panel-body">
+          <div class="chart" id="chart"></div>
+        </div>
+      </section>
+
+      <!-- Orders -->
+      <section class="panel" id="orders">
+        <div class="panel-head">
+          <h2>Recent orders</h2>
+          <span class="muted" id="orderCount"></span>
+        </div>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr><th>Order</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section class="panel" id="products">
+        <div class="panel-head">
+          <h2>Products · 8 flavors</h2>
+          <span class="muted">Banana Pudding</span>
+        </div>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr><th>Product</th><th>Price</th><th>Inventory</th><th>Sold</th><th>Status</th></tr>
+            </thead>
+            <tbody id="productsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  const money = n => '$' + n.toFixed(2);
+
+  // Product catalog (mirrors the storefront)
+  const PRODUCTS = [
+    { name: 'Traditional',      price: 6.00, img: 'images/traditional.jpeg',        stock: 24 },
+    { name: 'Blueberry Pie',    price: 6.50, img: 'images/blueberry-pie.jpeg',      stock: 18 },
+    { name: 'Cookie Butter',    price: 6.50, img: 'images/cookie-butter.jpeg',      stock: 9  },
+    { name: 'Cookies & Cream',  price: 6.50, img: 'images/cookies-and-cream.jpeg',  stock: 21 },
+    { name: 'Peach Cobbler',    price: 6.50, img: 'images/peach-cobbler.jpeg',      stock: 14 },
+    { name: 'Strawberry',       price: 6.50, img: 'images/strawberry.jpeg',         stock: 7  },
+    { name: 'Sweet Potato',     price: 6.50, img: '',                                stock: 16 },
+    { name: 'Snickerdoodle',    price: 6.50, img: '',                                stock: 12 },
+  ];
+  const priceOf = name => (PRODUCTS.find(p => p.name === name) || { price: 6.5 }).price;
+
+  // ---- Build sample orders across the last 7 days so the dashboard looks alive ----
+  const FIRST = ['Maya','Jordan','Tasha','Leo','Priya','Marcus','Ava','Diego','Nina','Sam','Kayla','Tom','Rosa','Will'];
+  const LAST = ['B.','R.','M.','K.','S.','J.','P.','C.','D.','L.'];
+  function seedOrders() {
+    const out = [];
+    let seed = 8675309;
+    const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    const now = Date.now();
+    let n = 204512;
+    for (let d = 6; d >= 0; d--) {
+      const perDay = 2 + Math.floor(rnd() * 4); // 2–5 orders/day
+      for (let k = 0; k < perDay; k++) {
+        const itemCount = 1 + Math.floor(rnd() * 3);
+        const items = [];
+        for (let j = 0; j < itemCount; j++) {
+          const p = PRODUCTS[Math.floor(rnd() * PRODUCTS.length)];
+          const qty = 1 + Math.floor(rnd() * 2);
+          const ex = items.find(i => i.name === p.name);
+          if (ex) ex.qty += qty; else items.push({ name: p.name, price: p.price, qty });
+        }
+        const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+        const ts = now - d * 86400000 - Math.floor(rnd() * 80000000);
+        out.push({
+          id: 'BMC-' + (n++),
+          name: FIRST[Math.floor(rnd() * FIRST.length)] + ' ' + LAST[Math.floor(rnd() * LAST.length)],
+          email: 'customer@example.com',
+          items, total, ts, seed: true
+        });
+      }
+    }
+    return out;
+  }
+
+  function loadOrders() {
+    let stored = [];
+    try { stored = JSON.parse(localStorage.getItem('bmc_orders') || '[]'); } catch (e) {}
+    // normalize stored
+    stored = stored.map(o => ({ ...o, items: o.items || [] }));
+    return [...seedOrders(), ...stored].sort((a, b) => b.ts - a.ts);
+  }
+
+  const orders = loadOrders();
+  const dayMs = 86400000;
+  const now = Date.now();
+  const within = ms => orders.filter(o => now - o.ts <= ms);
+
+  // ---- Metrics ----
+  const last7 = within(7 * dayMs);
+  const totalSales = last7.reduce((s, o) => s + o.total, 0);
+  const itemsSold = last7.reduce((s, o) => s + o.items.reduce((a, i) => a + i.qty, 0), 0);
+  const aov = last7.length ? totalSales / last7.length : 0;
+
+  document.getElementById('metrics').innerHTML = [
+    { label: 'Total sales', value: money(totalSales), delta: '+12.4%', up: true },
+    { label: 'Orders', value: last7.length, delta: '+8.1%', up: true },
+    { label: 'Avg. order value', value: money(aov), delta: '+3.2%', up: true },
+    { label: 'Items sold', value: itemsSold, delta: '-1.5%', up: false },
+  ].map(m => `
+    <div class="metric">
+      <div class="label">${m.label}</div>
+      <div class="value">${m.value}</div>
+      <div class="delta ${m.up ? 'up' : 'down'}">${m.up ? '▲' : '▼'} ${m.delta.replace('-', '')}</div>
+    </div>`).join('');
+
+  // ---- Chart: sales per day, last 7 days ----
+  const days = [];
+  for (let d = 6; d >= 0; d--) {
+    const start = new Date(now - d * dayMs); start.setHours(0, 0, 0, 0);
+    const end = start.getTime() + dayMs;
+    const sum = orders.filter(o => o.ts >= start.getTime() && o.ts < end).reduce((s, o) => s + o.total, 0);
+    days.push({ label: start.toLocaleDateString(undefined, { weekday: 'short' }), sum });
+  }
+  const maxSum = Math.max(...days.map(d => d.sum), 1);
+  document.getElementById('chart').innerHTML = days.map(d => `
+    <div class="bar-col">
+      <div class="bar" style="height:${Math.max(6, (d.sum / maxSum) * 100)}%" data-val="${money(d.sum)}"></div>
+      <div class="bar-lbl">${d.label}</div>
+    </div>`).join('');
+
+  // ---- Orders table ----
+  const fmtDate = ts => new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  const statuses = ['paid', 'fulfilled'];
+  document.getElementById('orderCount').textContent = orders.length + ' total';
+  document.getElementById('ordersBody').innerHTML = orders.slice(0, 12).map((o, idx) => {
+    const itemsTxt = o.items.map(i => i.qty + '× ' + i.name).join(', ');
+    const status = o.seed ? statuses[idx % 2] : 'new';
+    const label = status === 'new' ? 'New' : status[0].toUpperCase() + status.slice(1);
+    return `<tr>
+      <td class="mono">${o.id}</td>
+      <td>${fmtDate(o.ts)}</td>
+      <td>${o.name}</td>
+      <td style="max-width:240px;">${itemsTxt}</td>
+      <td class="mono">${money(o.total)}</td>
+      <td><span class="tag ${status}">${label}</span></td>
+    </tr>`;
+  }).join('');
+
+  // ---- Products table ----
+  const soldByName = {};
+  orders.forEach(o => o.items.forEach(i => { soldByName[i.name] = (soldByName[i.name] || 0) + i.qty; }));
+  document.getElementById('productsBody').innerHTML = PRODUCTS.map(p => {
+    const low = p.stock <= 10;
+    const thumbStyle = p.img ? `background-image:url('${p.img}')` : 'background:#fdf2c9;display:grid;place-items:center;';
+    const thumbInner = p.img ? '' : '🍌';
+    return `<tr class="prod-row">
+      <td><span class="prod-name"><span class="prod-thumb" style="${thumbStyle}">${thumbInner}</span>${p.name}</span></td>
+      <td class="mono">${money(p.price)}</td>
+      <td class="${low ? 'stock-low' : 'stock-ok'}">${p.stock} in stock${low ? ' · low' : ''}</td>
+      <td class="mono">${soldByName[p.name] || 0}</td>
+      <td><span class="tag paid">Active</span></td>
+    </tr>`;
+  }).join('');
+</script>
+</body>
+</html>

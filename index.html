@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Banana Me CrazEE! 🍌 | Banana Pudding · 8 Flavors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/logo.png">
+<meta name="description" content="Banana Me CrazEE! — sweet, creamy, addictive banana pudding in 8 crazy flavors. One bite and you'll go CRAZEE!" />
+<style>
+  :root {
+    --banana: #ffd60a;
+    --banana-deep: #ffc300;
+    --peel: #f4b400;
+    --leaf: #2e8b57;
+    --leaf-light: #4caf50;
+    --brown: #5c3a1e;
+    --cream: #fff8e1;
+    --ink: #2b2118;
+    --pink: #ff5d8f;
+    --sky: #5cc9f5;
+    --shadow: 0 10px 30px rgba(92, 58, 30, 0.18);
+    --radius: 22px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 { line-height: 1.05; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Floating banana confetti ---------- */
+  .bg-bananas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bg-bananas span {
+    position: absolute; top: -10%; font-size: 2rem; opacity: .25;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    to { transform: translateY(115vh) rotate(360deg); }
+  }
+
+  /* ---------- Nav ---------- */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: #fff;
+    border-bottom: 4px solid var(--brown);
+    box-shadow: 0 4px 0 rgba(92,58,30,.15);
+  }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; max-width: 1100px; margin: 0 auto; }
+  .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -.5px; color: var(--brown); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .logo .pop { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
+  @keyframes wiggle { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} }
+  .nav-links { display: flex; gap: 8px; list-style: none; align-items: center; }
+  .nav-links a {
+    text-decoration: none; color: var(--brown); font-weight: 700;
+    padding: 8px 14px; border-radius: 999px; transition: all .15s;
+  }
+  .nav-links a:hover { background: var(--brown); color: var(--banana); }
+  .nav-links a.cta { background: var(--brown); color: var(--banana); }
+  .nav-links a.cta:hover { background: var(--pink); color: #fff; }
+  .burger { display: none; background: none; border: 0; font-size: 1.8rem; cursor: pointer; color: var(--brown); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; z-index: 1;
+    background: radial-gradient(circle at 70% 20%, #fff3b0, var(--banana) 55%, var(--banana-deep));
+    padding: 80px 0 100px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 900;
+    color: var(--brown);
+    text-shadow: 4px 4px 0 #fff, 8px 8px 0 rgba(92,58,30,.15);
+    transform: rotate(-2deg);
+  }
+  .hero .sub { font-size: clamp(1.1rem, 2.5vw, 1.6rem); margin-top: 18px; font-weight: 700; color: #7a4f25; }
+  .hero .blurb { max-width: 560px; margin: 18px auto 0; font-size: 1.1rem; color: #6b4423; }
+  .btn {
+    display: inline-block; margin-top: 30px;
+    background: var(--brown); color: var(--banana);
+    font-weight: 800; font-size: 1.15rem;
+    padding: 16px 34px; border-radius: 999px; text-decoration: none;
+    box-shadow: var(--shadow); border: 3px solid #fff;
+    transition: transform .15s, background .15s;
+  }
+  .btn:hover { transform: translateY(-3px) scale(1.04); background: var(--pink); color: #fff; }
+  .btn.alt { background: #fff; color: var(--brown); }
+
+  .hero-banana { font-size: clamp(4rem, 14vw, 9rem); margin-bottom: 10px; display:inline-block; animation: bob 3s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+
+  /* ---------- Marquee strip ---------- */
+  .strip {
+    background: var(--brown); color: var(--banana);
+    font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 0; white-space: nowrap; overflow: hidden;
+  }
+  .strip .track { display: inline-block; animation: scroll 18s linear infinite; }
+  .strip span { padding: 0 26px; }
+  @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ---------- Sections ---------- */
+  section { position: relative; z-index: 1; }
+  .pad { padding: 80px 0; }
+  .section-title { text-align: center; font-size: clamp(2rem, 5vw, 3rem); color: var(--brown); margin-bottom: 12px; transform: rotate(-1deg); }
+  .section-title::after { content: ""; display: block; width: 80px; height: 6px; background: var(--banana-deep); border-radius: 99px; margin: 14px auto 0; }
+  .section-intro { text-align: center; max-width: 620px; margin: 0 auto 48px; color: #6b4423; font-size: 1.1rem; }
+
+  /* ---------- Menu cards ---------- */
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 26px; }
+  .card {
+    background: #fff; border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); border: 3px solid var(--banana);
+    transition: transform .18s, box-shadow .18s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: 0 18px 40px rgba(92,58,30,.25); }
+  .card .pic {
+    height: 200px; background: linear-gradient(135deg, var(--banana), var(--peel));
+    display: flex; align-items: center; justify-content: center; font-size: 4rem;
+  }
+  /* Real-photo version: add class "photo" and an inline background-image */
+  .card .pic.photo { background-size: cover; background-position: center; font-size: 0; }
+  .card .body { padding: 20px 22px 24px; flex: 1; display: flex; flex-direction: column; }
+  .card h3 { font-size: 1.35rem; color: var(--brown); }
+  .card p { margin: 8px 0 16px; color: #6b4423; font-size: .98rem; flex: 1; }
+  .price { font-weight: 900; color: var(--leaf); font-size: 1.2rem; }
+  .tag { align-self: flex-start; background: var(--pink); color:#fff; font-size:.7rem; font-weight:800; text-transform:uppercase; padding:4px 10px; border-radius:99px; margin-bottom:10px; letter-spacing:1px; }
+
+  /* ---------- About ---------- */
+  .about { background: var(--leaf-light); color: #fff; }
+  .about .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+  .about h2 { font-size: clamp(2rem,5vw,3rem); margin-bottom: 18px; transform: rotate(-1deg); }
+  .about p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 14px; }
+  .about .photo {
+    background: rgba(255,255,255,.2); border-radius: var(--radius); min-height: 320px;
+    display:flex; align-items:center; justify-content:center; font-size: 7rem;
+    border: 4px dashed rgba(255,255,255,.6);
+  }
+
+  /* ---------- Stats ---------- */
+  .stats { display:flex; flex-wrap:wrap; gap: 20px; justify-content:center; }
+  .stat { text-align:center; background:#fff; border:3px solid var(--banana); border-radius: var(--radius); padding: 26px 34px; box-shadow: var(--shadow); }
+  .stat .num { font-size: 2.6rem; font-weight: 900; color: var(--leaf); }
+  .stat .lbl { font-weight: 700; color: var(--brown); }
+
+  /* ---------- Visit / contact ---------- */
+  .visit { background: var(--banana); }
+  .visit .wrap { display:grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .info-card { background:#fff; border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); border:3px solid var(--brown); }
+  .info-card h3 { color: var(--brown); font-size: 1.5rem; margin-bottom: 16px; }
+  .info-row { display:flex; gap: 12px; align-items:flex-start; margin-bottom: 14px; font-size: 1.05rem; }
+  .info-row .ic { font-size: 1.4rem; }
+  form label { display:block; font-weight:700; color: var(--brown); margin: 12px 0 6px; }
+  form input, form textarea {
+    width:100%; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--peel);
+    font: inherit; background: var(--cream);
+  }
+  form input:focus, form textarea:focus { outline: 3px solid var(--leaf-light); border-color: var(--leaf-light); }
+  form button { margin-top: 18px; width:100%; cursor:pointer; border:0; }
+
+  /* ---------- Footer ---------- */
+  footer { background: var(--brown); color: var(--banana); text-align:center; padding: 40px 24px; }
+  footer .logo { justify-content:center; color: var(--banana); margin-bottom: 12px; }
+  footer .socials { display:flex; gap: 18px; justify-content:center; margin: 16px 0; }
+  footer .socials a { color: var(--banana); font-size: 1.6rem; text-decoration:none; transition: transform .15s; }
+  footer .socials a:hover { transform: scale(1.3) rotate(10deg); }
+  footer small { opacity:.7; display:block; margin-top: 10px; }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal { opacity:0; transform: translateY(30px); transition: opacity .6s, transform .6s; }
+  .reveal.show { opacity:1; transform:none; }
+
+  /* ---------- Brand wordmark (mimics the cup label) ---------- */
+  .wordmark {
+    display: inline-flex; flex-direction: column; align-items: center;
+    line-height: .82; font-family: 'Chewy', 'Arial Black', sans-serif;
+    font-weight: 400; letter-spacing: 0; transform: rotate(-3deg); text-transform: none;
+  }
+  /* shared keyline: dark stroke + white outer halo, like the printed sticker */
+  .wordmark span span, .wm-me {
+    -webkit-text-stroke: .085em #2a1a0c; paint-order: stroke fill;
+    text-shadow:
+      .035em 0 0 #fff, -.035em 0 0 #fff, 0 .035em 0 #fff, 0 -.035em 0 #fff,
+      .03em .03em 0 #fff, -.03em .03em 0 #fff, .03em -.03em 0 #fff, -.03em -.03em 0 #fff,
+      .07em .09em .02em rgba(0,0,0,.28);
+  }
+  .wm-row1 { display: flex; align-items: baseline; gap: .12em; }
+  .wm-banana { color: var(--banana); }
+  .wm-me { font-size: .46em; color: #2a1a0c; transform: rotate(-7deg); }
+  .wm-crazee { display: flex; margin-top: -.04em; }
+  .wm-craz { color: #2a1a0c; }
+  .wm-ee { color: var(--banana); }
+  .wm-crazee > span { font-size: 1.16em; }
+
+  /* banana mascot */
+  .mascot { display: block; }
+  .mascot.bob { animation: bob 3s ease-in-out infinite; }
+
+  /* brown "Banana Pudding" ribbon */
+  .ribbon {
+    display: inline-block; background: var(--brown); color: #fff;
+    font-weight: 800; letter-spacing: 1px; padding: .45em 1.5em;
+    border-radius: 8px; font-size: 1.05rem;
+    box-shadow: 0 4px 0 rgba(0,0,0,.18); border: 2px solid #fff;
+  }
+
+  /* hero label card (a giant version of the cup label) */
+  .label-card {
+    background: #fff; border: 5px solid var(--peel);
+    border-radius: 34px; padding: 34px 40px 30px;
+    max-width: 560px; margin: 0 auto;
+    box-shadow: 0 16px 40px rgba(92,58,30,.28);
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+    transform: rotate(-1.5deg);
+  }
+  .label-card .wordmark { font-size: clamp(2.4rem, 7vw, 4.1rem); }
+
+  /* real logo image */
+  .nav-logo { height: 56px; width: auto; display: block; }
+  .hero-logo { display: block; margin: 0 auto; width: min(460px, 86%); height: auto;
+    filter: drop-shadow(0 14px 26px rgba(92,58,30,.30)); }
+  .footer-logo { height: 132px; width: auto; display: block; margin: 0 auto; }
+
+  /* ---------- Ordering: add-to-cart, cart FAB, checkout modal ---------- */
+  .add-btn {
+    margin-top: 14px; width: 100%; border: 0; cursor: pointer;
+    background: var(--brown); color: var(--banana); font-weight: 800; font-size: 1rem;
+    padding: 12px; border-radius: 999px; font-family: inherit;
+    transition: transform .12s, background .15s;
+  }
+  .add-btn:hover { background: var(--leaf); color: #fff; transform: translateY(-2px); }
+  .add-btn.added { background: var(--leaf); color: #fff; }
+
+  .cart-fab {
+    position: fixed; right: 20px; bottom: 20px; z-index: 90;
+    background: var(--brown); color: var(--banana); border: 3px solid #fff;
+    border-radius: 999px; padding: 14px 20px; font-size: 1.3rem; font-weight: 800;
+    cursor: pointer; box-shadow: var(--shadow); display: flex; align-items: center; gap: 8px;
+    transition: transform .12s; font-family: inherit;
+  }
+  .cart-fab:hover { transform: scale(1.06); }
+  .cart-count {
+    background: var(--pink); color: #fff; border-radius: 999px; font-size: .85rem;
+    min-width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px;
+  }
+
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100; background: rgba(43,33,24,.55);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 24px; max-width: 460px; width: 100%; max-height: 90vh;
+    overflow: auto; padding: 28px; position: relative; border: 4px solid var(--banana);
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .modal-close { position: absolute; top: 10px; right: 14px; background: none; border: 0; font-size: 1.9rem; line-height: 1; cursor: pointer; color: var(--brown); }
+  .modal-h { font-family: 'Chewy', sans-serif; color: var(--brown); font-size: 1.8rem; margin-bottom: 14px; }
+  .modal .btn { width: 100%; font-family: inherit; margin-top: 10px; cursor: pointer; }
+
+  .cart-items { display: flex; flex-direction: column; gap: 10px; }
+  .cart-item { display: flex; align-items: center; gap: 10px; background: var(--cream); border-radius: 14px; padding: 10px 12px; }
+  .cart-item .ci-name { flex: 1; font-weight: 700; color: var(--ink); }
+  .cart-item .ci-price { font-weight: 800; color: var(--leaf); min-width: 58px; text-align: right; }
+  .qty { display: flex; align-items: center; gap: 8px; }
+  .qty button { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--peel); background: #fff; font-weight: 800; cursor: pointer; color: var(--brown); font-size: 1rem; line-height: 1; }
+  .qty span { min-width: 18px; text-align: center; font-weight: 800; }
+  .cart-empty { color: #6b4423; text-align: center; padding: 20px 0; }
+  .cart-total-row { display: flex; justify-content: space-between; font-weight: 900; font-size: 1.25rem; color: var(--brown); margin: 16px 0 4px; padding-top: 12px; border-top: 2px dashed var(--peel); }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+
+  .demo-note { background: #fff7d6; border: 2px solid var(--banana); color: #7a4f25; font-size: .85rem; font-weight: 700; padding: 10px 12px; border-radius: 12px; margin-bottom: 14px; }
+  .pay-summary { font-weight: 700; color: var(--brown); margin-bottom: 14px; }
+  #payForm label { display: block; font-weight: 700; color: var(--brown); margin-bottom: 10px; font-size: .95rem; }
+  #payForm input { width: 100%; margin-top: 5px; padding: 11px 13px; border-radius: 12px; border: 2px solid var(--peel); font: inherit; background: var(--cream); }
+  #payForm input:focus { outline: 3px solid var(--leaf-light); border-color: var(--leaf-light); }
+  .pay-row { display: flex; gap: 12px; }
+  .pay-row label { flex: 1; }
+  .pay-error { color: #d23; font-weight: 700; min-height: 1.1em; margin: 2px 0 6px; font-size: .9rem; }
+  .btn-link { display: block; margin: 12px auto 0; background: none; border: 0; color: var(--brown); font-weight: 700; cursor: pointer; text-decoration: underline; font-family: inherit; font-size: .95rem; }
+  .done-emoji { font-size: 3rem; text-align: center; }
+  .done-text, .done-order, .done-sub { text-align: center; color: #6b4423; }
+  .done-order { font-size: 1.15rem; margin: 8px 0; }
+  .done-sub { font-size: .85rem; opacity: .8; }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 760px) {
+    .burger { display:block; }
+    .nav-links {
+      position: absolute; top: 100%; left:0; right:0; flex-direction: column;
+      background: var(--banana); padding: 12px; gap: 6px; display:none;
+      border-bottom: 4px solid var(--brown);
+    }
+    .nav-links.open { display:flex; }
+    .about .wrap, .visit .wrap { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Banana mascot, defined once and reused via <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="nana" viewBox="0 0 120 150">
+    <g stroke="#2a1a0c" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+      <!-- peel flaps -->
+      <path d="M55 90 C44 106 38 122 42 136 C49 128 56 112 62 98 Z" fill="#ffd60a"/>
+      <path d="M65 90 C76 106 82 122 78 136 C71 128 64 112 58 98 Z" fill="#f4b400"/>
+      <path d="M60 92 C58 110 57 126 60 140 C63 126 64 110 62 96 Z" fill="#ffd60a"/>
+      <!-- arms -->
+      <path d="M47 72 C33 66 29 52 33 42" fill="none"/>
+      <path d="M73 74 C86 78 90 72 89 64" fill="none"/>
+      <!-- fruit body -->
+      <path d="M60 14 C78 22 82 60 73 92 C68 104 52 104 47 92 C38 60 42 22 60 14 Z" fill="#fdf2c9"/>
+    </g>
+    <!-- face -->
+    <g stroke="none">
+      <circle cx="53" cy="52" r="4.4" fill="#2a1a0c"/>
+      <circle cx="51.6" cy="50.6" r="1.4" fill="#fff"/>
+      <path d="M63 53 q5 -6 10 0" fill="none" stroke="#2a1a0c" stroke-width="3.6" stroke-linecap="round"/>
+      <circle cx="45" cy="62" r="3.6" fill="#ff8fab" opacity=".75"/>
+      <circle cx="75" cy="61" r="3.6" fill="#ff8fab" opacity=".75"/>
+      <path d="M50 64 Q60 80 70 64 Q60 71 50 64 Z" fill="#7a2e2e"/>
+      <path d="M55 71 Q60 76 65 71 Q60 73 55 71 Z" fill="#ff6b6b"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="bg-bananas" id="bgBananas" aria-hidden="true"></div>
+
+<header>
+  <nav>
+    <a href="#top" class="logo"><img class="nav-logo" src="images/logo.png" alt="Banana Me CrazEE" /></a>
+    <button class="burger" id="burger" aria-label="Menu">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#visit">Visit Us</a></li>
+      <li><a href="#menu" class="cta" id="navOrder">Order Online</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <img class="hero-logo bob" src="images/logo.png" alt="Banana Me CrazEE — Banana Pudding" />
+      <p class="sub">Sweet • Creamy • Addictive</p>
+      <p class="blurb">Real homemade banana pudding in <strong>8 crazy flavors</strong>, made fresh every day. One bite and you'll go <strong>CRAZEE!</strong></p>
+      <div>
+        <a href="#menu" class="btn">See the 8 Flavors</a>
+        <a href="#visit" class="btn alt">Find Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="strip">
+    <div class="track">
+      <span>🍌 8 Crazy Flavors</span><span>🥄 Sweet</span><span>🍮 Creamy</span><span>🔥 Addictive</span><span>💛 Made Fresh Daily</span>
+      <span>🍌 8 Crazy Flavors</span><span>🥄 Sweet</span><span>🍮 Creamy</span><span>🔥 Addictive</span><span>💛 Made Fresh Daily</span>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section class="pad" id="menu">
+    <div class="wrap">
+      <h2 class="section-title reveal">8 CrazEE Flavors</h2>
+      <p class="section-intro reveal">Real homemade banana pudding, made fresh daily. Sweet, creamy, addictive — add your favorites to the cart and order online!</p>
+      <div class="menu-grid">
+
+        <div class="card reveal">
+          <div class="pic photo" style="background-image:url('images/traditional.jpeg')"></div>
+          <div class="body">
+            <span class="tag">The Original</span>
+            <h3>Traditional</h3>
+            <p>The classic that started it all — rich, creamy banana pudding done right.</p>
+            <span class="price">$6.00</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic photo" style="background-image:url('images/blueberry-pie.jpeg')"></div>
+          <div class="body">
+            <span class="tag">Fan Favorite</span>
+            <h3>Blueberry Pie</h3>
+            <p>Sweet blueberry pie filling swirled into our signature banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic photo" style="background-image:url('images/cookie-butter.jpeg')"></div>
+          <div class="body">
+            <h3>Cookie Butter</h3>
+            <p>Warm, spiced cookie butter folded through thick, creamy banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic photo" style="background-image:url('images/cookies-and-cream.jpeg')"></div>
+          <div class="body">
+            <h3>Cookies &amp; Cream</h3>
+            <p>Crushed chocolate sandwich cookies layered into silky banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic photo" style="background-image:url('images/peach-cobbler.jpeg')"></div>
+          <div class="body">
+            <h3>Peach Cobbler</h3>
+            <p>Juicy spiced peaches &amp; cobbler crumble over creamy banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic photo" style="background-image:url('images/strawberry.jpeg')"></div>
+          <div class="body">
+            <h3>Strawberry</h3>
+            <p>Sweet strawberry swirl rippled through rich, creamy banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic">🍠</div>
+          <div class="body">
+            <h3>Sweet Potato</h3>
+            <p>Spiced sweet potato pie swirled into rich, creamy banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="pic">🍪</div>
+          <div class="body">
+            <span class="tag">New!</span>
+            <h3>Snickerdoodle</h3>
+            <p>Cinnamon-sugar snickerdoodle cookies folded through banana pudding.</p>
+            <span class="price">$6.50</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about pad" id="about">
+    <div class="wrap">
+      <div class="reveal">
+        <h2>Our Story</h2>
+        <p>It started with one family recipe for banana pudding so good people couldn't stop asking for it. So we made 8 flavors of it.</p>
+        <p>Everything is homemade and made fresh daily — sweet, creamy, and dangerously addictive. We don't do boring.</p>
+        <p><strong>One bite and you'll go CRAZEE! 🍌</strong></p>
+      </div>
+      <div class="photo reveal" style="background-image:url('images/hero.jpeg'); background-size:cover; background-position:center; border-style:solid;"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="pad">
+    <div class="wrap stats">
+      <div class="stat reveal"><div class="num" data-count="50000">0</div><div class="lbl">Cups Served</div></div>
+      <div class="stat reveal"><div class="num" data-count="8">0</div><div class="lbl">CrazEE Flavors</div></div>
+      <div class="stat reveal"><div class="num" data-count="100">0</div><div class="lbl">% Homemade</div></div>
+      <div class="stat reveal"><div class="num" data-count="5">0</div><div class="lbl">Star Rating ⭐</div></div>
+    </div>
+  </section>
+
+  <!-- VISIT / CONTACT -->
+  <section class="visit pad" id="visit">
+    <div class="wrap">
+      <div class="info-card reveal" id="contact">
+        <h3>Visit Us</h3>
+        <div class="info-row"><span class="ic">📍</span><span>123 Banana Boulevard<br/>Fruitville, CA 90210</span></div>
+        <div class="info-row"><span class="ic">🕒</span><span>Mon–Sat: 8am – 8pm<br/>Sunday: 9am – 5pm</span></div>
+        <div class="info-row"><span class="ic">📞</span><span>(555) 123-PEEL</span></div>
+        <div class="info-row"><span class="ic">✉️</span><span>hello@bananamecrazee.com</span></div>
+      </div>
+      <div class="info-card reveal">
+        <h3>Drop Us a Line</h3>
+        <form id="contactForm">
+          <label for="name">Your Name</label>
+          <input id="name" name="name" type="text" placeholder="Banana lover" required />
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+          <label for="msg">Message</label>
+          <textarea id="msg" name="msg" rows="3" placeholder="I'd like to order..." required></textarea>
+          <button class="btn" type="submit">Send It! 🍌</button>
+        </form>
+        <p id="formMsg" style="margin-top:14px; font-weight:700; color:var(--leaf);"></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ORDER: floating cart + mock checkout -->
+<button class="cart-fab" id="cartFab" aria-label="View your cart">🛒 <span class="cart-count" id="cartCount">0</span></button>
+
+<div class="modal-overlay" id="orderModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+
+    <!-- Cart view -->
+    <div class="view" id="cartView">
+      <h3 class="modal-h" id="modalTitle">Your Order 🛒</h3>
+      <div class="cart-items" id="cartItems"></div>
+      <p class="cart-empty" id="cartEmpty">Your cart is empty — go add some pudding! 🍌</p>
+      <div class="cart-total-row"><span>Total</span><span id="cartTotal">$0.00</span></div>
+      <button class="btn" id="toCheckout" disabled>Checkout</button>
+    </div>
+
+    <!-- Payment view -->
+    <div class="view" id="payView" hidden>
+      <h3 class="modal-h">Checkout 💳</h3>
+      <div class="demo-note">🔒 Demo checkout — this is a mock form. No real card is charged. Try card <strong>4242 4242 4242 4242</strong>.</div>
+      <p class="pay-summary" id="paySummary"></p>
+      <form id="payForm" novalidate>
+        <label>Name on card
+          <input id="pf-name" type="text" autocomplete="name" placeholder="Jane Banana" />
+        </label>
+        <label>Email
+          <input id="pf-email" type="email" autocomplete="email" placeholder="you@example.com" />
+        </label>
+        <label>Card number
+          <input id="pf-card" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" />
+        </label>
+        <div class="pay-row">
+          <label>Expiry
+            <input id="pf-exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" />
+          </label>
+          <label>CVC
+            <input id="pf-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" />
+          </label>
+        </div>
+        <p class="pay-error" id="payError"></p>
+        <button class="btn" type="submit" id="payBtn">Pay <span id="payAmount"></span></button>
+        <button class="btn-link" type="button" id="backToCart">&larr; Back to cart</button>
+      </form>
+    </div>
+
+    <!-- Success view -->
+    <div class="view" id="doneView" hidden>
+      <div class="done-emoji">🎉🍌</div>
+      <h3 class="modal-h" style="text-align:center;">Order Confirmed!</h3>
+      <p class="done-text">Thanks <span id="doneName"></span>! Your CrazEE pudding is on the way.</p>
+      <p class="done-order">Order <strong id="doneOrder"></strong></p>
+      <p class="done-sub">A confirmation was &ldquo;sent&rdquo; to <span id="doneEmail"></span>.</p>
+      <button class="btn" id="doneClose">Sweet! 🍌</button>
+    </div>
+  </div>
+</div>
+
+<footer
+  <img class="footer-logo" src="images/logo.png" alt="Banana Me CrazEE" />
+  <p>Sweet • Creamy • Addictive. One bite and you'll go CRAZEE!</p>
+  <div class="socials">
+    <a href="#" aria-label="Instagram">📷</a>
+    <a href="#" aria-label="Facebook">👍</a>
+    <a href="#" aria-label="TikTok">🎵</a>
+  </div>
+  <small>© 2026 Banana Me CrazEE!. All rights reserved. Made with 💛 & bananas.</small>
+  <small style="margin-top:6px;"><a href="dashboard.html" style="color:var(--banana);opacity:.7;text-decoration:underline;">Owner Dashboard →</a></small>
+</footer>
+
+<script>
+  // Floating banana confetti
+  (function () {
+    const c = document.getElementById('bgBananas');
+    const emojis = ['🍌','🍌','🍌','🐒','💛'];
+    for (let i = 0; i < 18; i++) {
+      const s = document.createElement('span');
+      s.textContent = emojis[i % emojis.length];
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.animationDuration = (8 + Math.random() * 10) + 's';
+      s.style.animationDelay = (-Math.random() * 12) + 's';
+      s.style.fontSize = (1.2 + Math.random() * 2.2) + 'rem';
+      c.appendChild(s);
+    }
+  })();
+
+  // Mobile menu toggle
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Animated counters
+  const counters = document.querySelectorAll('.num');
+  const cio = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.count;
+      const dur = 1400; const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        el.textContent = Math.floor(p * target).toLocaleString();
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      cio.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+  counters.forEach(c => cio.observe(c));
+
+  // Contact form (demo)
+  document.getElementById('contactForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.getElementById('formMsg').textContent = "Thanks! We'll go bananas getting back to you. 🍌";
+    e.target.reset();
+  });
+
+  // ---------- Order / mock checkout ----------
+  (function () {
+    const fmt = n => '$' + n.toFixed(2);
+    const cart = [];
+    const overlay = document.getElementById('orderModal');
+    const countEl = document.getElementById('cartCount');
+    const itemsEl = document.getElementById('cartItems');
+    const emptyEl = document.getElementById('cartEmpty');
+    const totalEl = document.getElementById('cartTotal');
+    const toCheckout = document.getElementById('toCheckout');
+    const views = {
+      cart: document.getElementById('cartView'),
+      pay: document.getElementById('payView'),
+      done: document.getElementById('doneView'),
+    };
+
+    const total = () => cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const count = () => cart.reduce((s, i) => s + i.qty, 0);
+
+    function showView(name) {
+      Object.entries(views).forEach(([k, el]) => { el.hidden = (k !== name); });
+    }
+    function openModal() { overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); document.body.classList.add('modal-open'); }
+    function closeModal() { overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open'); }
+
+    function render() {
+      countEl.textContent = count();
+      totalEl.textContent = fmt(total());
+      toCheckout.disabled = cart.length === 0;
+      emptyEl.style.display = cart.length ? 'none' : 'block';
+      itemsEl.innerHTML = '';
+      cart.forEach((it, idx) => {
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML =
+          '<span class="ci-name">' + it.name + '</span>' +
+          '<span class="qty">' +
+            '<button data-act="dec" data-i="' + idx + '" aria-label="Decrease">–</button>' +
+            '<span>' + it.qty + '</span>' +
+            '<button data-act="inc" data-i="' + idx + '" aria-label="Increase">+</button>' +
+          '</span>' +
+          '<span class="ci-price">' + fmt(it.price * it.qty) + '</span>';
+        itemsEl.appendChild(row);
+      });
+    }
+
+    function addToCart(name, price) {
+      const ex = cart.find(i => i.name === name);
+      if (ex) ex.qty++; else cart.push({ name, price, qty: 1 });
+      render();
+    }
+
+    // Inject "Add to Cart" buttons into each menu card
+    document.querySelectorAll('.menu-grid .card').forEach(cardEl => {
+      const name = cardEl.querySelector('h3').textContent.trim();
+      const price = parseFloat(cardEl.querySelector('.price').textContent.replace(/[^0-9.]/g, '')) || 0;
+      const btn = document.createElement('button');
+      btn.className = 'add-btn';
+      btn.textContent = 'Add to Cart';
+      btn.addEventListener('click', () => {
+        addToCart(name, price);
+        btn.textContent = 'Added! ✓'; btn.classList.add('added');
+        setTimeout(() => { btn.textContent = 'Add to Cart'; btn.classList.remove('added'); }, 900);
+      });
+      cardEl.querySelector('.body').appendChild(btn);
+    });
+
+    // Quantity +/- (event delegation)
+    itemsEl.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const i = +b.dataset.i;
+      if (b.dataset.act === 'inc') cart[i].qty++;
+      else { cart[i].qty--; if (cart[i].qty <= 0) cart.splice(i, 1); }
+      render();
+    });
+
+    // Open / close
+    document.getElementById('cartFab').addEventListener('click', () => { showView('cart'); openModal(); });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Nav "Order Online": open cart if it has items, else jump to the menu
+    const navOrder = document.getElementById('navOrder');
+    if (navOrder) navOrder.addEventListener('click', e => {
+      e.preventDefault();
+      navLinks.classList.remove('open');
+      if (cart.length) { showView('cart'); openModal(); }
+      else document.getElementById('menu').scrollIntoView();
+    });
+
+    // Cart -> checkout
+    const paySummary = document.getElementById('paySummary');
+    const payAmount = document.getElementById('payAmount');
+    toCheckout.addEventListener('click', () => {
+      paySummary.textContent = count() + ' item' + (count() > 1 ? 's' : '') + ' • Total ' + fmt(total());
+      payAmount.textContent = fmt(total());
+      showView('pay');
+    });
+    document.getElementById('backToCart').addEventListener('click', () => showView('cart'));
+
+    // Input formatting
+    const cardInput = document.getElementById('pf-card');
+    cardInput.addEventListener('input', () => {
+      const v = cardInput.value.replace(/\D/g, '').slice(0, 16);
+      cardInput.value = v.replace(/(.{4})/g, '$1 ').trim();
+    });
+    const expInput = document.getElementById('pf-exp');
+    expInput.addEventListener('input', () => {
+      let v = expInput.value.replace(/\D/g, '').slice(0, 4);
+      if (v.length >= 3) v = v.slice(0, 2) + '/' + v.slice(2);
+      expInput.value = v;
+    });
+    const cvcInput = document.getElementById('pf-cvc');
+    cvcInput.addEventListener('input', () => { cvcInput.value = cvcInput.value.replace(/\D/g, '').slice(0, 4); });
+
+    // Mock payment submit
+    const payForm = document.getElementById('payForm');
+    const payError = document.getElementById('payError');
+    const payBtn = document.getElementById('payBtn');
+    payForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('pf-name').value.trim();
+      const email = document.getElementById('pf-email').value.trim();
+      const cnum = cardInput.value.replace(/\s/g, '');
+      const m = expInput.value.match(/^(\d{2})\/(\d{2})$/);
+      payError.textContent = '';
+      if (!name) { payError.textContent = 'Please enter the name on the card.'; return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { payError.textContent = 'Please enter a valid email.'; return; }
+      if (cnum.length < 15) { payError.textContent = 'Please enter a valid card number.'; return; }
+      if (!m || +m[1] < 1 || +m[1] > 12) { payError.textContent = 'Please enter a valid expiry (MM/YY).'; return; }
+      if (cvcInput.value.length < 3) { payError.textContent = 'Please enter a valid CVC.'; return; }
+
+      const orig = payBtn.innerHTML;
+      payBtn.disabled = true;
+      payBtn.textContent = 'Processing…';
+      setTimeout(() => {
+        const order = 'BMC-' + Math.floor(100000 + Math.random() * 900000);
+        // Save the order so the owner dashboard can show it
+        try {
+          const rec = { id: order, name, email, total: total(),
+            items: cart.map(i => ({ name: i.name, price: i.price, qty: i.qty })), ts: Date.now() };
+          const arr = JSON.parse(localStorage.getItem('bmc_orders') || '[]');
+          arr.push(rec);
+          localStorage.setItem('bmc_orders', JSON.stringify(arr));
+        } catch (err) { /* storage unavailable — ignore */ }
+        document.getElementById('doneName').textContent = name.split(' ')[0];
+        document.getElementById('doneEmail').textContent = email;
+        document.getElementById('doneOrder').textContent = order;
+        showView('done');
+        payBtn.disabled = false; payBtn.innerHTML = orig;
+        payForm.reset();
+        cart.length = 0; render();
+      }, 1300);
+    });
+
+    document.getElementById('doneClose').addEventListener('click', closeModal);
+
+    render();
+  })();
+</script>
+</body>
+</html>
