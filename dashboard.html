@@ -192,16 +192,16 @@
 
   // Product catalog (mirrors the storefront)
   const PRODUCTS = [
-    { name: 'Traditional',      price: 6.00, img: 'images/traditional.jpeg',        stock: 24 },
-    { name: 'Blueberry Pie',    price: 6.50, img: 'images/blueberry-pie.jpeg',      stock: 18 },
-    { name: 'Cookie Butter',    price: 6.50, img: 'images/cookie-butter.jpeg',      stock: 9  },
-    { name: 'Cookies & Cream',  price: 6.50, img: 'images/cookies-and-cream.jpeg',  stock: 21 },
-    { name: 'Peach Cobbler',    price: 6.50, img: 'images/peach-cobbler.jpeg',      stock: 14 },
-    { name: 'Strawberry',       price: 6.50, img: 'images/strawberry.jpeg',         stock: 7  },
-    { name: 'Sweet Potato',     price: 6.50, img: '',                                stock: 16 },
-    { name: 'Snickerdoodle',    price: 6.50, img: '',                                stock: 12 },
+    { name: 'Traditional',      price: 12.00, img: 'images/traditional.jpeg',        stock: 24 },
+    { name: 'Blueberry Pie',    price: 15.00, img: 'images/blueberry-pie.jpeg',      stock: 18 },
+    { name: 'Cookie Butter',    price: 15.00, img: 'images/cookie-butter.jpeg',      stock: 9  },
+    { name: 'Cookies & Cream',  price: 15.00, img: 'images/cookies-and-cream.jpeg',  stock: 21 },
+    { name: 'Peach Cobbler',    price: 15.00, img: 'images/peach-cobbler.jpeg',      stock: 14 },
+    { name: 'Strawberry',       price: 15.00, img: 'images/strawberry.jpeg',         stock: 7  },
+    { name: 'Sweet Potato',     price: 15.00, img: '',                                stock: 16 },
+    { name: 'Snickerdoodle',    price: 15.00, img: '',                                stock: 12 },
   ];
-  const priceOf = name => (PRODUCTS.find(p => p.name === name) || { price: 6.5 }).price;
+  const priceOf = name => (PRODUCTS.find(p => p.name === name) || { price: 15 }).price;
 
   // ---- Build sample orders across the last 7 days so the dashboard looks alive ----
   const FIRST = ['Maya','Jordan','Tasha','Leo','Priya','Marcus','Ava','Diego','Nina','Sam','Kayla','Tom','Rosa','Will'];
